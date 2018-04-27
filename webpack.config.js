@@ -5,7 +5,7 @@ const resolve = dir => path.join(__dirname, '..', dir);
 const { VueLoaderPlugin } = require('vue-loader');
 
 module.exports = {
-  entry: './src/lupus-slider.vue',
+  entry: './src/index.js',
   output: {
     filename: 'index.js',
     path: path.resolve(__dirname, 'dist'),
