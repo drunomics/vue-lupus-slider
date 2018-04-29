@@ -1,34 +1,24 @@
 <template>
-  <div>
-    <h1>{{ msg }}</h1>
-    <!--<swiper>-->
-      <!--<swiper-slide>Slide 1</swiper-slide>-->
-      <!--<swiper-slide>Slide 2</swiper-slide>-->
-      <!--<swiper-slide>Slide 3</swiper-slide>-->
-      <!--<swiper-slide>Slide 4</swiper-slide>-->
-      <!--<swiper-slide>Slide 5</swiper-slide>-->
-      <!--<swiper-slide>Slide 6</swiper-slide>-->
-      <!--<swiper-slide>Slide 7</swiper-slide>-->
-      <!--<swiper-slide>Slide 8</swiper-slide>-->
-      <!--<swiper-slide>Slide 9</swiper-slide>-->
-      <!--<swiper-slide>Slide 10</swiper-slide>-->
-    <!--</swiper>-->
+  <div class="lupus-slider">
+    <swiper>
+      <slot/>
+    </swiper>
   </div>
 </template>
 
 <script>
-//  import {swiper, swiperSlide} from 'vue-awesome-swiper';
+import {swiper} from 'vue-awesome-swiper';
 
-  export default {
-    name: 'lupus-slider',
-//    components: [
-//      swiper,
-//      swiperSlide,
-//    ],
-    data() {
-      return {
-        msg: 'test'
-      }
-    }
+export default {
+  name: 'lupus-slider',
+  components: {
+    'swiper': swiper,
   }
+}
 </script>
+
+<style lang="scss">
+  .lupus-slider {
+    border: 1px solid darkgreen;
+  }
+</style>

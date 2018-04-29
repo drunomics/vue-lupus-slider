@@ -7,8 +7,14 @@ const { VueLoaderPlugin } = require('vue-loader');
 module.exports = {
   entry: './src/index.js',
   output: {
-    filename: 'index.js',
     path: path.resolve(__dirname, 'dist'),
+    filename: '[name].js',
+    library: 'vue-lupus-slider',
+    libraryTarget: 'umd',
+    umdNamedDefine: true,
+  },
+  resolve: {
+    extensions: ['.js', '.vue' ],
   },
   mode: 'production',
   module: {
@@ -28,6 +34,14 @@ module.exports = {
         loader: 'babel-loader',
         exclude: [/node_modules/],
       },
+      {
+        test: /\.scss$/,
+        use: [
+          'vue-style-loader',
+          'css-loader',
+          'sass-loader'
+        ]
+      }
     ],
   },
   plugins: [

@@ -2,10 +2,11 @@
   "name": "vue-lupus-slider",
   "version": "0.0.1",
   "description": "Vue slider component",
-  "main": "dist/index.js",
+  "main": "dist/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:dev": "npx webpack --mode=development",
+    "watch": "npx webpack --mode=development -w",
     "build": "npx webpack"
   },
   "repository": {
@@ -28,7 +29,11 @@
     "babel-loader": "^7.1.4",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.1",
+    "css-loader": "^0.28.11",
     "eslint-loader": "^2.0.0",
+    "node-sass": "^4.9.0",
+    "sass-loader": "^7.0.1",
+    "style-loader": "^0.21.0",
     "vue-awesome-swiper": "^3.1.3",
     "vue-loader": "^15.0.3",
     "vue-template-compiler": "^2.5.16"
