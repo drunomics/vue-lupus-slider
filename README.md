@@ -5,9 +5,11 @@ Vue slider component.
 
 ## Install
 
-* Clone the repo and run `npm link`
-* Run `npm link vue-lupus-slider` in the repo where you want to use vue-lupus-slider.
+via npm:
+`npm install https://github.com/drunomics/vue-lupus-slider.git`
 
+
+import it:
 
 ```
 import { LupusSlider, LupusSliderSlide } from 'vue-lupus-slider';
