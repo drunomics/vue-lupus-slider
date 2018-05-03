@@ -1,6 +1,6 @@
 {
   "name": "vue-lupus-slider",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Vue slider component",
   "main": "dist/main.js",
   "scripts": {
