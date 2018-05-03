@@ -1,7 +1,8 @@
 <template>
   <div class="lupus-slider">
-    <swiper>
+    <swiper :options="swiperOptions" ref="lupusSlider">
       <slot/>
+      <div class="swiper-pagination" slot="pagination"></div>
     </swiper>
   </div>
 </template>
@@ -11,6 +12,16 @@ import {swiper} from 'vue-awesome-swiper';
 
 export default {
   name: 'lupus-slider',
+  data () {
+    return {
+      swiperOptions: {
+        pagination: {
+          el: '.swiper-pagination',
+          type: 'bullets',
+        },
+      }
+    };
+  },
   components: {
     'swiper': swiper,
   }
