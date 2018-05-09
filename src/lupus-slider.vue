@@ -1,11 +1,12 @@
 <template>
   <div class="lupus-slider">
-    <swiper :options="swiperOptions" ref="lupusSlider">
+    <swiper :options="swiperOptions" ref="lupusSlider" v-on:slideChange="slideChange">
       <slot/>
       <div class="swiper-pagination" slot="pagination"></div>
       <div class="swiper-button-prev" slot="button-prev"></div>
       <div class="swiper-button-next" slot="button-next"></div>
     </swiper>
+    <div class="lupus-slider-index">{{ index }} / {{ slides }}</div>
   </div>
 </template>
 
@@ -36,11 +37,21 @@ export default {
     }
 
     return {
-      swiperOptions
+      swiperOptions,
+      index: 1,
+      slides: 0,
     };
   },
   components: {
     'swiper': swiper,
+  },
+  mounted() {
+    this.slides = this.$refs.lupusSlider.swiper.slides.length;
+  },
+  methods: {
+    slideChange() {
+      this.index = this.$refs.lupusSlider.swiper.activeIndex + 1;
+    }
   }
 }
 </script>
