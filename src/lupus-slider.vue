@@ -1,17 +1,19 @@
 <template>
-  <div class="lupus-slider">
-    <swiper :options="swiperOptions" ref="lupusSlider" v-on:slideChange="slideChange">
-      <slot/>
+  <div class="lupus-slider" v-bind:class="{ 'lupus-slider--shown': show }">
+    <lupus-swiper :options="swiperOptions" ref="lupusSlider" v-on:slideChange="slideChange">
+      <slot/>init
       <div class="swiper-pagination" slot="pagination"></div>
+      <div class="swiper-index" slot="pagination-index">
+        <div class="swiper-index__count">{{ index }} / {{ slides }}</div>
+      </div>
       <div class="swiper-button-prev" slot="button-prev"></div>
       <div class="swiper-button-next" slot="button-next"></div>
-    </swiper>
-    <div class="lupus-slider-index">{{ index }} / {{ slides }}</div>
+    </lupus-swiper>
   </div>
 </template>
 
 <script>
-import {swiper} from 'vue-awesome-swiper';
+import lupusSwiper from './lupus-swiper.vue';
 
 export default {
   name: 'lupus-slider',
@@ -40,17 +42,19 @@ export default {
       swiperOptions,
       index: 1,
       slides: 0,
+      show: false,
     };
   },
   components: {
-    'swiper': swiper,
+    'lupus-swiper': lupusSwiper,
   },
   mounted() {
     this.slides = this.$refs.lupusSlider.swiper.slides.length;
+    this.show = true;
   },
   methods: {
     slideChange() {
-      this.index = this.$refs.lupusSlider.swiper.activeIndex + 1;
+      this.index = this.$refs.lupusSlider.swiper.realIndex + 1;
     }
   }
 }
@@ -660,4 +664,17 @@ export default {
     -ms-perspective: 1200px;
   }
 
+  .swiper-index {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .lupus-slider {
+    transition: opacity 500ms ease-in;
+  }
+
+  .lupus-slider--shown {
+    opacity: 1 !important;
+  }
 </style>
