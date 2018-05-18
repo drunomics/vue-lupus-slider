@@ -2,12 +2,12 @@
   <div class="lupus-slider" v-bind:class="{ 'lupus-slider--shown': show }">
     <lupus-swiper :options="swiperOptions" ref="lupusSlider" v-on:slideChange="slideChange">
       <slot/>init
-      <div class="swiper-pagination" slot="pagination"></div>
-      <div class="swiper-index" slot="pagination-index">
+      <div class="swiper-pagination" slot="pagination" :style="paginationStyle"></div>
+      <div v-if="slideindex" class="swiper-index" slot="pagination-index" :style="indexStyle">
         <div class="swiper-index__count">{{ index }} / {{ slides }}</div>
       </div>
-      <div class="swiper-button-prev" slot="button-prev"></div>
-      <div class="swiper-button-next" slot="button-next"></div>
+      <div class="swiper-button-prev" slot="button-prev" :style="navigationStyle"></div>
+      <div class="swiper-button-next" slot="button-next" :style="navigationStyle"></div>
     </lupus-swiper>
   </div>
 </template>
@@ -17,7 +17,7 @@ import lupusSwiper from './lupus-swiper.vue';
 
 export default {
   name: 'lupus-slider',
-  props: ['arrows', 'bullets', 'autoplay', 'loop'],
+  props: ['arrows', 'bullets', 'autoplay', 'navposfirstelement', 'slideindex', 'loop'],
   data () {
     let swiperOptions = {};
     if (this.arrows) {
@@ -47,19 +47,48 @@ export default {
       index: 1,
       slides: 0,
       show: false,
+      paginationStyle: {
+        bottom: '0',
+      },
+      indexStyle: {
+        bottom: '0',
+      },
+      navigationStyle: {
+        top: '50%',
+      },
     };
   },
   components: {
     'lupus-swiper': lupusSwiper,
   },
   mounted() {
+    if (this.navposfirstelement) {
+      window.addEventListener('resize', this.updateStyleObjects);
+      window.addEventListener('load', this.updateStyleObjects);
+    }
     this.slides = this.$refs.lupusSlider.swiper.slides.length;
     this.show = true;
   },
   methods: {
     slideChange() {
       this.index = this.$refs.lupusSlider.swiper.realIndex + 1;
-    }
+    },
+    imageHeight() {
+      const index = this.$refs.lupusSlider.swiper.activeIndex;
+      return this.$refs.lupusSlider.swiper.slides[index].firstChild.children[0].offsetHeight;
+    },
+    updateStyleObjects() {
+      const imageHeight = this.imageHeight();
+      this.navigationStyle = {
+        top: `${imageHeight/2}px`,
+      };
+      this.indexStyle = {
+        top: `${imageHeight}px`,
+      };
+      this.paginationStyle = {
+        top: `${imageHeight}px`,
+      };
+    },
   }
 }
 </script>
@@ -672,6 +701,8 @@ export default {
     display: flex;
     justify-content: center;
     align-items: flex-start;
+    position: absolute;
+    width: 100%;
   }
 
   .lupus-slider {
