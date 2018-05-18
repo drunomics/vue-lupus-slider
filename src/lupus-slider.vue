@@ -17,7 +17,7 @@ import lupusSwiper from './lupus-swiper.vue';
 
 export default {
   name: 'lupus-slider',
-  props: ['arrows', 'bullets', 'autoplay'],
+  props: ['arrows', 'bullets', 'autoplay', 'loop'],
   data () {
     let swiperOptions = {};
     if (this.arrows) {
@@ -36,6 +36,10 @@ export default {
       swiperOptions.autoplay = {
         delay: this.autoplay,
       };
+    }
+
+    if (this.loop) {
+      swiperOptions.loop = true;
     }
 
     return {
