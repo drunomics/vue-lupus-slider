@@ -1,7 +1,7 @@
 <template>
   <div class="lupus-slider" v-bind:class="{ 'lupus-slider--shown': show }">
     <lupus-swiper :options="swiperOptions" ref="lupusSlider" v-on:slideChange="slideChange">
-      <slot/>init
+      <slot/>
       <div class="swiper-pagination" slot="pagination" :style="paginationStyle"></div>
       <div v-if="slideindex" class="swiper-index" slot="pagination-index" :style="indexStyle">
         <div class="swiper-index__count">{{ index }} / {{ slides }}</div>
@@ -66,7 +66,11 @@ export default {
       window.addEventListener('resize', this.updateStyleObjects);
       window.addEventListener('load', this.updateStyleObjects);
     }
+
     this.slides = this.$refs.lupusSlider.swiper.slides.length;
+    if (this.loop) {
+      this.slides = this.slides - 2;
+    }
     this.show = true;
   },
   methods: {
