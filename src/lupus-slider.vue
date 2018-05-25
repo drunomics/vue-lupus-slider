@@ -72,10 +72,16 @@ export default {
       this.slides = this.slides - 2;
     }
     this.show = true;
+    this.transformSlide(this.$refs.lupusSlider.swiper.activeIndex);
+    this.transformSlide(this.$refs.lupusSlider.swiper.activeIndex - 1);
+    this.transformSlide(this.$refs.lupusSlider.swiper.activeIndex + 1);
   },
   methods: {
     slideChange() {
       this.index = this.$refs.lupusSlider.swiper.realIndex + 1;
+      this.transformSlide(this.$refs.lupusSlider.swiper.activeIndex);
+      this.transformSlide(this.$refs.lupusSlider.swiper.activeIndex - 1);
+      this.transformSlide(this.$refs.lupusSlider.swiper.activeIndex + 1);
     },
     imageHeight() {
       const index = this.$refs.lupusSlider.swiper.activeIndex;
@@ -93,6 +99,22 @@ export default {
         top: `${imageHeight}px`,
       };
     },
+    transformSlide(index) {
+      let slide = this.$refs.lupusSlider.swiper.slides[index];
+      if (slide && slide.getElementsByClassName('slider__image').length) {
+        let slider_image = slide.getElementsByClassName('slider__image')[0];
+        if (slider_image.className.indexOf('slider__image--transformed') === -1) {
+          const img = JSON.parse(slider_image.dataset.img);
+          const sources = JSON.parse(slider_image.dataset.sources);
+          let html = '<picture>'
+          sources.forEach(source => html += `<source media="${source.media}" srcset="${source.srcset}">`)
+          html += `<img src="${img.uri}" alt="${img.alt}" title="${img.title}">`
+          html += "</picture>";
+          slider_image.innerHTML = html;
+          slider_image.className = "slider__image slider__image--transformed";
+        }
+      }
+    }
   }
 }
 </script>
