@@ -17,7 +17,7 @@ import lupusSwiper from './lupus-swiper.vue';
 
 export default {
   name: 'lupus-slider',
-  props: ['arrows', 'bullets', 'autoplay', 'navposfirstelement', 'slideindex', 'loop'],
+  props: ['arrows', 'bullets', 'autoplay', 'navposfirstelement', 'slideindex', 'loop', 'slidesperview', 'spacebetween'],
   data () {
     let swiperOptions = {};
     if (this.arrows) {
@@ -40,6 +40,14 @@ export default {
 
     if (this.loop) {
       swiperOptions.loop = true;
+    }
+
+    if (this.slidesperview) {
+      swiperOptions.slidesPerView = this.slidesperview;
+    }
+
+    if (this.spacebetween) {
+      swiperOptions.spaceBetween = parseInt(this.spacebetween, 10);
     }
 
     return {
@@ -85,7 +93,10 @@ export default {
     },
     imageHeight() {
       const index = this.$refs.lupusSlider.swiper.activeIndex;
-      return this.$refs.lupusSlider.swiper.slides[index].firstChild.children[0].offsetHeight;
+      if (index && this.$refs.lupusSlider.swiper.slides[index]) {
+        return this.$refs.lupusSlider.swiper.slides[index].firstChild.children[0].offsetHeight;
+      }
+      return 0;
     },
     updateStyleObjects() {
       const imageHeight = this.imageHeight();
