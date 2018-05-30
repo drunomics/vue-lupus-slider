@@ -36,3 +36,13 @@ Options are mostly self-explanatory.
 
 `navposfirstelement` - this option makes all navigation and pagination elements
 get a calculated top position based on the first element in the slide.
+
+## Lazyloading
+
+If a slide contains an element with the class `slider__image` it will be transformed into 
+a picture element.
+
+`div data-sources='{{ sources_json }}' data-img='{{ img_json }}' class="slider__image"></div>`
+
+sources_json: An Array of objects e.g. `[{ media: "", srcset:""}]`
+img: objects e.g. `{ uri: "", alt: "", title: """}`
