@@ -37,7 +37,7 @@ export default {
         el: '.swiper-pagination',
         type: 'bullets',
       };
-      if (typeof this.bulletOptions === 'object') {
+      if (typeof this.bullets === 'object') {
           Object.assign(bulletOptions, this.bullets);
       }
       swiperOptions.pagination = bulletOptions;
