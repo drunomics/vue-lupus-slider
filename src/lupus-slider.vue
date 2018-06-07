@@ -27,7 +27,7 @@ export default {
           prevEl: '.swiper-button-prev',
       };
       if (typeof this.arrows === 'object') {
-          Object.assign(arrowOptions, this.arrows);
+          arrowOptions = Object.assign(arrowOptions, this.arrows);
       }
       swiperOptions.navigation = arrowOptions;
     }
@@ -38,7 +38,7 @@ export default {
         type: 'bullets',
       };
       if (typeof this.bullets === 'object') {
-          Object.assign(bulletOptions, this.bullets);
+          bulletOptions = Object.assign(bulletOptions, this.bullets);
       }
       swiperOptions.pagination = bulletOptions;
     }
