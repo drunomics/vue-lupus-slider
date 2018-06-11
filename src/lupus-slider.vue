@@ -20,18 +20,30 @@ export default {
   props: ['arrows', 'bullets', 'autoplay', 'navposfirstelement', 'slideindex', 'loop', 'slidesperview', 'spacebetween'],
   data () {
     let swiperOptions = {};
+
     if (this.arrows) {
-      swiperOptions.navigation = {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
+      let arrowOptions = {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
       };
+      if (typeof this.arrows === 'object') {
+          arrowOptions = Object.assign(arrowOptions, this.arrows);
+      }
+      swiperOptions.navigation = arrowOptions;
     }
+
     if (this.bullets) {
-      swiperOptions.pagination = {
+      let bulletOptions = {
         el: '.swiper-pagination',
         type: 'bullets',
       };
+      if (typeof this.bullets === 'object' && this.bullets.type === 'custom') {
+          bulletOptions = Object.assign(bulletOptions, this.bullets);
+          bulletOptions.renderCustom = window[this.bullets.renderFunction]
+      }
+      swiperOptions.pagination = bulletOptions;
     }
+
     if (this.autoplay) {
       swiperOptions.autoplay = {
         delay: this.autoplay,
