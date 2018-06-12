@@ -143,6 +143,12 @@
       this.transformSlide(this.$refs.lupusSlider.swiper.activeIndex + 1);
     },
     methods: {
+      slideTo(slide, speed, callback) {
+        const swiper = this.$refs.lupusSlider.swiper;
+        if (typeof slide === 'number') {
+          swiper.slideTo(slide, speed);
+        }
+      },
       slideChange() {
         this.index = this.$refs.lupusSlider.swiper.realIndex + 1;
         this.transformSlide(this.$refs.lupusSlider.swiper.activeIndex);
