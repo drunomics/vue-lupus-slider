@@ -1,5 +1,6 @@
 <template>
   <div class="lupus-slider" v-bind:class="{ 'lupus-slider--shown': show }">
+    <slider-tabs v-if="tabs" :tabs="tabs" :current-index="index" v-on:navigate="slideTo"  />
     <lupus-swiper :options="swiperOptions" ref="lupusSlider" v-on:slideChange="slideChange">
       <slot/>
       <div class="swiper-pagination" slot="pagination" :style="paginationStyle"></div>
@@ -14,6 +15,7 @@
 
 <script>
 import lupusSwiper from './lupus-swiper.vue';
+import lupusSliderTabs from './lupus-slider-tabs';
 
 export default {
   name: 'lupus-slider',
@@ -64,12 +66,51 @@ export default {
       navigationStyle: {
         top: '50%',
       },
+      tabs: []
     };
   },
   components: {
     'lupus-swiper': lupusSwiper,
+    'slider-tabs' : lupusSliderTabs
   },
   mounted() {
+    const slideElements = this.$refs.lupusSlider.swiper.slides; // Dom7 obj
+    let realSlides = [];
+    let tabs = [];
+
+    slideElements.each((i, el) => {
+      if ( el.classList.contains('swiper-slide-duplicate') ) {
+        // dont't process duplicates
+        return;
+      }
+      realSlides.push(el);
+    });
+
+    for (let i=0; i<realSlides.length; i++) {
+      const el = realSlides[i];
+      if ( el.classList.contains('swiper-slide-duplicate') ) {
+        // dont't process duplicates
+        return;
+      }
+      const tab = el.querySelector('.tab-name');
+      if (tab) {
+        tabs.push({
+          name: tab.value,
+          start: i,
+          end: null
+        });
+        if ( tabs.length-1 ) {
+          tabs[tabs.length-2].end = i-1;
+        }
+      }
+      if (tabs.length && i === realSlides.length-1) {
+        tabs[tabs.length-1].end = i;
+      }
+    }
+    if (tabs.length) {
+        this.tabs = tabs
+    }
+
     if (this.navposfirstelement) {
       window.addEventListener('resize', this.updateStyleObjects);
       window.addEventListener('load', this.updateStyleObjects);
@@ -85,6 +126,12 @@ export default {
     this.transformSlide(this.$refs.lupusSlider.swiper.activeIndex + 1);
   },
   methods: {
+    slideTo(slide, speed, callback) {
+        const swiper = this.$refs.lupusSlider.swiper;
+        if (typeof slide === 'number') {
+            swiper.slideTo(slide, speed);
+        }
+    },
     slideChange() {
       this.index = this.$refs.lupusSlider.swiper.realIndex + 1;
       this.transformSlide(this.$refs.lupusSlider.swiper.activeIndex);
