@@ -155,10 +155,10 @@
       this.transformSlide(this.$refs.lupusSlider.swiper.activeIndex + 1);
     },
     methods: {
-      slideTo(slide, speed, callback) {
+      slideTo(slide, speed, runCallbacks) {
         const swiper = this.$refs.lupusSlider.swiper;
         if (typeof slide === 'number') {
-          swiper.slideTo(slide, speed);
+          swiper.slideTo(slide, speed, runCallbacks);
         }
       },
       slideChange() {
