@@ -24,7 +24,17 @@
 
   export default {
     name: 'lupus-slider',
-    props: ['arrows', 'bullets', 'autoplay', 'navposfirstelement', 'slideindex', 'loop', 'slidesperview', 'spacebetween'],
+    props: [
+      'arrows',
+      'bullets',
+      'autoplay',
+      'navposfirstelement',
+      'slideindex',
+      'loop',
+      'slidesperview',
+      'spacebetween',
+      'tabsSetup'
+    ],
     data () {
       let swiperOptions = {};
 
@@ -83,7 +93,7 @@
         navigationStyle: {
           top: '50%',
         },
-        tabs: [],
+        tabs: this.tabsSetup ? this.tabsSetup : [],
       };
     },
     components: {
@@ -91,41 +101,43 @@
       'slider-tabs' : lupusSliderTabs
     },
     mounted() {
-      const slideElements = this.$refs.lupusSlider.swiper.slides; // Dom7 obj
-      let realSlides = [];
-      let tabs = [];
+      if (!this.tabsSetup) {
+        const slideElements = this.$refs.lupusSlider.swiper.slides; // Dom7 obj
+        let realSlides = [];
+        let tabs = [];
 
-      slideElements.each((i, el) => {
-        if ( el.classList.contains('swiper-slide-duplicate') ) {
-          // dont't process duplicates
-          return;
-        }
-        realSlides.push(el);
-      });
+        slideElements.each((i, el) => {
+          if ( el.classList.contains('swiper-slide-duplicate') ) {
+            // dont't process duplicates
+            return;
+          }
+          realSlides.push(el);
+        });
 
-      for (let i=0; i<realSlides.length; i++) {
-        const el = realSlides[i];
-        if ( el.classList.contains('swiper-slide-duplicate') ) {
-          // dont't process duplicates
-          return;
-        }
-        const tab = el.querySelector('.tab-name');
-        if (tab) {
-          tabs.push({
-            name: tab.value,
-            start: i,
-            end: null
-          });
-          if ( tabs.length-1 ) {
-            tabs[tabs.length-2].end = i-1;
+        for (let i=0; i<realSlides.length; i++) {
+          const el = realSlides[i];
+          if ( el.classList.contains('swiper-slide-duplicate') ) {
+            // dont't process duplicates
+            return;
+          }
+          const tab = el.querySelector('.tab-name');
+          if (tab) {
+            tabs.push({
+              name: tab.value,
+              start: i,
+              end: null
+            });
+            if ( tabs.length-1 ) {
+              tabs[tabs.length-2].end = i-1;
+            }
+          }
+          if (tabs.length && i === realSlides.length-1) {
+            tabs[tabs.length-1].end = i;
           }
         }
-        if (tabs.length && i === realSlides.length-1) {
-          tabs[tabs.length-1].end = i;
+        if (tabs.length) {
+          this.tabs = tabs
         }
-      }
-      if (tabs.length) {
-         this.tabs = tabs
       }
 
       if (this.navposfirstelement) {
