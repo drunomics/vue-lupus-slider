@@ -128,11 +128,11 @@
               start: i,
               end: i
             });
-            if ( tabs.length-1 ) {
+            if ( this.tabModeFill === true && tabs.length-1 ) {
               tabs[tabs.length-2].end = i-1;
             }
           }
-          if (this.tabModeFill && tabs.length && i === realSlides.length-1) {
+          if (this.tabModeFill === true && tabs.length && i === realSlides.length-1) {
             tabs[tabs.length-1].end = i;
           }
         }
