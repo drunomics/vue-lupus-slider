@@ -10,10 +10,14 @@
            :style="indexStyle">
         <div class="swiper-index__count">{{ index }} / {{ slides }}</div>
       </div>
-      <div class="swiper-button-prev" slot="button-prev"
-           :style="navigationStyle"></div>
-      <div class="swiper-button-next" slot="button-next"
-           :style="navigationStyle"></div>
+      <div class="swiper-button-prev"
+           :style="navigationStyle">
+        <slot name="button-prev"></slot>
+      </div>
+      <div class="swiper-button-next"
+           :style="navigationStyle">
+        <slot name="button-next"></slot>
+      </div>
     </lupus-swiper>
   </div>
 </template>
