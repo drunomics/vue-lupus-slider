@@ -23,192 +23,195 @@
 </template>
 
 <script>
-  import lupusSwiper from './lupus-swiper.vue';
-  import lupusSliderTabs from './lupus-slider-tabs';
+import lupusSwiper from './lupus-swiper.vue'
+import lupusSliderTabs from './lupus-slider-tabs'
 
-  export default {
-    name: 'lupus-slider',
-    props: [
-      'arrows',
-      'bullets',
-      'autoplay',
-      'navposfirstelement',
-      'slideindex',
-      'loop',
-      'slidesperview',
-      'spacebetween',
-      'tabsSetup',
-      'tabModeFill',
-    ],
-    data () {
-      let swiperOptions = {};
+export default {
+  name: 'lupus-slider',
+  props: [
+    'arrows',
+    'bullets',
+    'autoplay',
+    'navposfirstelement',
+    'slideindex',
+    'loop',
+    'slidesperview',
+    'spacebetween',
+    'tabsSetup',
+    'tabModeFill'
+  ],
+  data () {
+    let swiperOptions = {}
 
-      if (this.arrows) {
-        let arrowOptions = {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev',
-        };
-        if (typeof this.arrows === 'object') {
-          arrowOptions = Object.assign(arrowOptions, this.arrows);
+    if (this.arrows) {
+      let arrowOptions = {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev'
+      }
+      if (typeof this.arrows === 'object') {
+        arrowOptions = Object.assign(arrowOptions, this.arrows)
+      }
+      swiperOptions.navigation = arrowOptions
+    }
+
+    if (this.bullets) {
+      let bulletOptions = {
+        el: '.swiper-pagination',
+        type: 'bullets'
+      }
+      if (typeof this.bullets === 'object' && this.bullets.type === 'custom') {
+        bulletOptions = Object.assign(bulletOptions, this.bullets)
+        bulletOptions.renderCustom = window[this.bullets.renderFunction]
+      }
+      swiperOptions.pagination = bulletOptions
+    }
+
+    if (this.autoplay) {
+      swiperOptions.autoplay = {
+        delay: this.autoplay
+      }
+    }
+
+    if (this.loop) {
+      swiperOptions.loop = true
+    }
+
+    if (this.slidesperview) {
+      swiperOptions.slidesPerView = this.slidesperview
+    }
+
+    if (this.spacebetween) {
+      swiperOptions.spaceBetween = parseInt(this.spacebetween, 10)
+    }
+
+    return {
+      swiperOptions,
+      index: 1,
+      slides: 0,
+      show: false,
+      paginationStyle: {
+        bottom: '0'
+      },
+      indexStyle: {
+        bottom: '0'
+      },
+      navigationStyle: {
+        top: '50%'
+      },
+      tabs: this.tabsSetup ? this.tabsSetup : []
+    }
+  },
+  components: {
+    'lupus-swiper': lupusSwiper,
+    'slider-tabs': lupusSliderTabs
+  },
+  mounted () {
+    if (!this.tabsSetup) {
+      const slideElements = this.$refs.lupusSlider.swiper.slides // Dom7 obj
+      let realSlides = []
+      let tabs = []
+
+      slideElements.each((i, el) => {
+        if (el.classList.contains('swiper-slide-duplicate')) {
+          // dont't process duplicates
+          return
         }
-        swiperOptions.navigation = arrowOptions;
-      }
+        realSlides.push(el)
+      })
 
-      if (this.bullets) {
-        let bulletOptions = {
-          el: '.swiper-pagination',
-          type: 'bullets',
-        };
-        if (typeof this.bullets === 'object' && this.bullets.type === 'custom') {
-          bulletOptions = Object.assign(bulletOptions, this.bullets);
-          bulletOptions.renderCustom = window[this.bullets.renderFunction]
+      for (let i = 0; i < realSlides.length; i++) {
+        const el = realSlides[i]
+        if (el.classList.contains('swiper-slide-duplicate')) {
+          // dont't process duplicates
+          return
         }
-        swiperOptions.pagination = bulletOptions;
+        const tab = el.querySelector('.tab-name')
+        if (tab) {
+          tabs.push({
+            name: tab.value,
+            start: i,
+            end: i
+          })
+          if (this.tabModeFill === true && tabs.length - 1) {
+            tabs[tabs.length - 2].end = i - 1
+          }
+        }
+        if (this.tabModeFill === true && tabs.length && i === realSlides.length - 1) {
+          tabs[tabs.length - 1].end = i
+        }
       }
-
-      if (this.autoplay) {
-        swiperOptions.autoplay = {
-          delay: this.autoplay,
-        };
+      if (tabs.length) {
+        this.tabs = tabs
       }
+    }
 
-      if (this.loop) {
-        swiperOptions.loop = true;
+    if (this.navposfirstelement) {
+      window.addEventListener('resize', this.updateStyleObjects)
+      window.addEventListener('load', this.updateStyleObjects)
+    }
+
+    this.slides = this.$refs.lupusSlider.swiper.slides.length
+    if (this.loop) {
+      this.slides = this.slides - 2
+    }
+    this.show = true
+    this.transformSlide(this.$refs.lupusSlider.swiper.activeIndex)
+    this.transformSlide(this.$refs.lupusSlider.swiper.activeIndex - 1)
+    this.transformSlide(this.$refs.lupusSlider.swiper.activeIndex + 1)
+  },
+  methods: {
+    slideTo (slide, speed, runCallbacks) {
+      const swiper = this.$refs.lupusSlider.swiper
+      if (typeof slide === 'number') {
+        swiper.slideTo(slide, speed, runCallbacks)
       }
-
-      if (this.slidesperview) {
-        swiperOptions.slidesPerView = this.slidesperview;
-      }
-
-      if (this.spacebetween) {
-        swiperOptions.spaceBetween = parseInt(this.spacebetween, 10);
-      }
-
-      return {
-        swiperOptions,
-        index: 1,
-        slides: 0,
-        show: false,
-        paginationStyle: {
-          bottom: '0',
-        },
-        indexStyle: {
-          bottom: '0',
-        },
-        navigationStyle: {
-          top: '50%',
-        },
-        tabs: this.tabsSetup ? this.tabsSetup : [],
-      };
     },
-    components: {
-      'lupus-swiper': lupusSwiper,
-      'slider-tabs' : lupusSliderTabs
+    slideChange () {
+      this.index = this.$refs.lupusSlider.swiper.realIndex + 1
+      this.transformSlide(this.$refs.lupusSlider.swiper.activeIndex)
+      this.transformSlide(this.$refs.lupusSlider.swiper.activeIndex - 1)
+      this.transformSlide(this.$refs.lupusSlider.swiper.activeIndex + 1)
     },
-    mounted() {
-      if (!this.tabsSetup) {
-        const slideElements = this.$refs.lupusSlider.swiper.slides; // Dom7 obj
-        let realSlides = [];
-        let tabs = [];
-
-        slideElements.each((i, el) => {
-          if ( el.classList.contains('swiper-slide-duplicate') ) {
-            // dont't process duplicates
-            return;
-          }
-          realSlides.push(el);
-        });
-
-        for (let i=0; i<realSlides.length; i++) {
-          const el = realSlides[i];
-          if ( el.classList.contains('swiper-slide-duplicate') ) {
-            // dont't process duplicates
-            return;
-          }
-          const tab = el.querySelector('.tab-name');
-          if (tab) {
-            tabs.push({
-              name: tab.value,
-              start: i,
-              end: i
-            });
-            if ( this.tabModeFill === true && tabs.length-1 ) {
-              tabs[tabs.length-2].end = i-1;
-            }
-          }
-          if (this.tabModeFill === true && tabs.length && i === realSlides.length-1) {
-            tabs[tabs.length-1].end = i;
-          }
-        }
-        if (tabs.length) {
-          this.tabs = tabs
-        }
+    imageHeight () {
+      const index = this.$refs.lupusSlider.swiper.activeIndex
+      if (index && this.$refs.lupusSlider.swiper.slides[index]) {
+        return this.$refs.lupusSlider.swiper.slides[index].firstChild.children[0].offsetHeight
       }
-
-      if (this.navposfirstelement) {
-        window.addEventListener('resize', this.updateStyleObjects);
-        window.addEventListener('load', this.updateStyleObjects);
-      }
-
-      this.slides = this.$refs.lupusSlider.swiper.slides.length;
-      if (this.loop) {
-        this.slides = this.slides - 2;
-      }
-      this.show = true;
-      this.transformSlide(this.$refs.lupusSlider.swiper.activeIndex);
-      this.transformSlide(this.$refs.lupusSlider.swiper.activeIndex - 1);
-      this.transformSlide(this.$refs.lupusSlider.swiper.activeIndex + 1);
+      return 0
     },
-    methods: {
-      slideTo(slide, speed, runCallbacks) {
-        const swiper = this.$refs.lupusSlider.swiper;
-        if (typeof slide === 'number') {
-          swiper.slideTo(slide, speed, runCallbacks);
-        }
-      },
-      slideChange() {
-        this.index = this.$refs.lupusSlider.swiper.realIndex + 1;
-        this.transformSlide(this.$refs.lupusSlider.swiper.activeIndex);
-        this.transformSlide(this.$refs.lupusSlider.swiper.activeIndex - 1);
-        this.transformSlide(this.$refs.lupusSlider.swiper.activeIndex + 1);
-      },
-      imageHeight() {
-        const index = this.$refs.lupusSlider.swiper.activeIndex;
-        if (index && this.$refs.lupusSlider.swiper.slides[index]) {
-          return this.$refs.lupusSlider.swiper.slides[index].firstChild.children[0].offsetHeight;
-        }
-        return 0;
-      },
-      updateStyleObjects() {
-        const imageHeight = this.imageHeight();
-        this.navigationStyle = {
-          top: `${imageHeight / 2}px`,
-        };
-        this.indexStyle = {
-          top: `${imageHeight}px`,
-        };
-        this.paginationStyle = {
-          top: `${imageHeight}px`,
-        };
-      },
-      transformSlide(index) {
-        let slide = this.$refs.lupusSlider.swiper.slides[index];
-        if (slide && slide.getElementsByClassName('slider__image').length) {
-          let slider_image = slide.getElementsByClassName('slider__image')[0];
-          if (slider_image.className.indexOf('slider__image--transformed') === -1) {
-            const img = JSON.parse(slider_image.dataset.img);
-            const sources = JSON.parse(slider_image.dataset.sources);
-            let html = '<picture>'
-            sources.forEach(source => html += `<source media="${source.media}" srcset="${source.srcset}">`)
-            html += `<img src="${img.uri}" alt="${img.alt}" title="${img.title}">`
-            html += "</picture>";
-            slider_image.innerHTML = html;
-            slider_image.className = "slider__image slider__image--transformed";
-          }
+    updateStyleObjects () {
+      const imageHeight = this.imageHeight()
+      this.navigationStyle = {
+        top: `${imageHeight / 2}px`
+      }
+      this.indexStyle = {
+        top: `${imageHeight}px`
+      }
+      this.paginationStyle = {
+        top: `${imageHeight}px`
+      }
+    },
+    transformSlide (index) {
+      let slide = this.$refs.lupusSlider.swiper.slides[index]
+      if (slide && slide.getElementsByClassName('slider__image').length) {
+        let sliderImage = slide.getElementsByClassName('slider__image')[0]
+        if (sliderImage.className.indexOf('slider__image--transformed') === -1) {
+          const img = JSON.parse(sliderImage.dataset.img)
+          const sources = JSON.parse(sliderImage.dataset.sources)
+          let html = '<picture>'
+          sources.forEach(source => {
+            html += `<source media="${source.media}" srcset="${source.srcset}">`
+            return html
+          })
+          html += `<img src="${img.uri}" alt="${img.alt}" title="${img.title}">`
+          html += '</picture>'
+          sliderImage.innerHTML = html
+          sliderImage.className = 'slider__image slider__image--transformed'
         }
       }
     }
   }
+}
 </script>
 
 <style lang="scss">

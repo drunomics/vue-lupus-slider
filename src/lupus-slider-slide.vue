@@ -5,12 +5,12 @@
 </template>
 
 <script>
-import {swiperSlide} from 'vue-awesome-swiper';
+import { swiperSlide } from 'vue-awesome-swiper'
 
 export default {
   name: 'lupus-slider-slide',
   components: {
-    'swiper-slide': swiperSlide,
+    'swiper-slide': swiperSlide
   }
 }
 </script>
