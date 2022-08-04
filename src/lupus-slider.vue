@@ -38,10 +38,13 @@ export default {
     'slidesperview',
     'spacebetween',
     'tabsSetup',
-    'tabModeFill'
+    'tabModeFill',
+    'simulateTouch'
   ],
   data () {
-    let swiperOptions = {}
+    let swiperOptions = {
+      simulateTouch: false
+    }
 
     if (this.arrows) {
       let arrowOptions = {
@@ -82,6 +85,10 @@ export default {
 
     if (this.spacebetween) {
       swiperOptions.spaceBetween = parseInt(this.spacebetween, 10)
+    }
+
+    if (this.simulateTouch) {
+      swiperOptions.simulateTouch = true
     }
 
     return {
