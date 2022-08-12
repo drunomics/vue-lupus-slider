@@ -13,9 +13,9 @@
 </template>
 
 <script>
-import {swiper} from 'vue-awesome-swiper';
+import { swiper } from 'vue-awesome-swiper'
 
 export default {
-  extends: swiper,
+  extends: swiper
 }
 </script>
