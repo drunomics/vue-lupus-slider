@@ -34,8 +34,7 @@
       'slidesperview',
       'spacebetween',
       'tabsSetup',
-      'tabModeFill',
-      'simulateTouch',
+      'tabModeFill'
     ],
     data () {
       let swiperOptions = {
@@ -81,10 +80,6 @@
 
       if (this.spacebetween) {
         swiperOptions.spaceBetween = parseInt(this.spacebetween, 10);
-      }
-
-      if (this.simulateTouch) {
-        swiperOptions.simulateTouch = true;
       }
 
       return {
