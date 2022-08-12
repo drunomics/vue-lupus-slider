@@ -1,6 +1,6 @@
 {
   "name": "@drunomics/vue-lupus-slider",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Vue slider component",
   "main": "dist/vue-lupus-slider.umd.min.js",
   "scripts": {
