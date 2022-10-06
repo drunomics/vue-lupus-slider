@@ -1,6 +1,7 @@
 # vue-lupus-slider
 Vue slider component.
 
+## Attention: Warning - this is outdated. 
 
 
 ## Install
